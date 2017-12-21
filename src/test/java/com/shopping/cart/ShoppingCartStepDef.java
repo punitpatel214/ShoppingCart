@@ -60,4 +60,14 @@ public class ShoppingCartStepDef {
     public void theShoppingCartSTotalPriceShouldEqual(double totalPrice) throws Throwable {
         assertThat(shoppingCart.totalPrice(), is(totalPrice));
     }
+
+    @And("^a Tax Rate of \"([^\"]*)\"%$")
+    public void aTaxRateOf(double taxRate) throws Throwable {
+        shoppingCart.setTaxCalculator(new SimpleTaxCalculator(taxRate));
+    }
+
+    @And("^The total Tax amount should equal to \"([^\"]*)\"$")
+    public void theTotalTaxAmountShouldEqualTo(double tax) throws Throwable {
+        assertThat(shoppingCart.totalTax(), is(tax));
+    }
 }

@@ -7,9 +7,15 @@ import java.util.*;
 
 public class ShoppingCart {
     private Map<Long, CartProductDetail> productIdToCartProductDetailMap;
+    private TaxCalculator taxCalculator;
 
     public ShoppingCart() {
         this.productIdToCartProductDetailMap = new HashMap<>();
+        this.taxCalculator = new NoTaxCalculator();
+    }
+
+    public void setTaxCalculator(TaxCalculator taxCalculator) {
+        this.taxCalculator = taxCalculator;
     }
 
     public void addProduct(Product product, int quantity) {
@@ -22,8 +28,17 @@ public class ShoppingCart {
     }
 
     public double totalPrice() {
+        double totalAmount = totalAmount();
+        return totalAmount + taxCalculator.calculateTax(totalAmount);
+    }
+
+    private double totalAmount() {
         return MathUtil.round(productIdToCartProductDetailMap.values().stream()
                 .mapToDouble(CartProductDetail::totalProductPrice)
                 .sum(), 2);
+    }
+
+    public double totalTax() {
+        return taxCalculator.calculateTax(totalAmount());
     }
 }
